@@ -1,4 +1,6 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_events.h>
+#include <stdio.h>
 
 int main()
 {
@@ -27,8 +29,12 @@ int main()
     {
       running = 0;
     }
+    if (event.type == SDL_KEYDOWN)
+    {
+      printf("key pressed\n");
+    }
 
-    SDL_Delay(100);
+    SDL_Delay(1);
   }
 
 }
