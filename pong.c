@@ -1,6 +1,4 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_rect.h>
-#include <SDL2/SDL_surface.h>
 
 int main()
 {
@@ -18,6 +16,19 @@ int main()
 
   SDL_UpdateWindowSurface(window);
 
-  SDL_Delay(5000);
+
+  int running = 1;
+  SDL_Event event;
+  while (running)
+  {
+    SDL_PollEvent(&event);
+
+    if (event.type == SDL_QUIT)
+    {
+      running = 0;
+    }
+
+    SDL_Delay(100);
+  }
 
 }
