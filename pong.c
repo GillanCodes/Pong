@@ -1,5 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keycode.h>
+#include <SDL2/SDL_surface.h>
 #include <stdio.h>
 
 int main()
@@ -16,7 +18,6 @@ int main()
   SDL_Rect pl2 = (SDL_Rect) {560, 120, 40, 200};
   SDL_FillRect(surface, &pl2, color);
 
-  SDL_UpdateWindowSurface(window);
 
 
   int running = 1;
@@ -24,16 +25,29 @@ int main()
   while (running)
   {
     SDL_PollEvent(&event);
-
+    SDL_UpdateWindowSurface(window);
+      
     if (event.type == SDL_QUIT)
     {
       running = 0;
     }
+
     if (event.type == SDL_KEYDOWN)
     {
-      printf("key pressed\n");
+      if (event.key.keysym.sym == SDLK_UP)
+      {
+        SDL_FillRect(surface, &pl1, 0x00000000);
+        pl1.y -= 10;
+        SDL_FillRect(surface, &pl1, color);
+      }
+      if (event.key.keysym.sym == SDLK_DOWN)
+      {
+        SDL_FillRect(surface, &pl1, 0x00000000);
+        pl1.y += 10;
+        SDL_FillRect(surface, &pl1, color);
+      }
     }
-
+    
     SDL_Delay(1);
   }
 
