@@ -1,5 +1,12 @@
 #include <SDL2/SDL.h>
 
+void move_rect(SDL_Surface* surface, SDL_Rect * rect, int down)
+{
+  SDL_FillRect(surface, rect, 0x00000000);
+  rect->y += down;
+  SDL_FillRect(surface, rect, 0xFFFFFFFF);
+}
+
 int main()
 {
   SDL_InitSubSystem(SDL_INIT_VIDEO);
@@ -10,14 +17,13 @@ int main()
 
   SDL_Rect pl1 = (SDL_Rect) {40, 40, 40, 200};
   SDL_FillRect(surface, &pl1, color);
- 
+
   SDL_Rect pl2 = (SDL_Rect) {560, 120, 40, 200};
   SDL_FillRect(surface, &pl2, color);
 
-
-
   int running = 1;
   SDL_Event event;
+
   while (running)
   {
     SDL_PollEvent(&event);
@@ -32,19 +38,14 @@ int main()
     {
       if (event.key.keysym.sym == SDLK_UP)
       {
-        SDL_FillRect(surface, &pl1, 0x00000000);
-        pl1.y -= 10;
-        SDL_FillRect(surface, &pl1, color);
+        move_rect(surface, &pl1, -10);
       }
       if (event.key.keysym.sym == SDLK_DOWN)
       {
-        SDL_FillRect(surface, &pl1, 0x00000000);
-        pl1.y += 10;
-        SDL_FillRect(surface, &pl1, color);
+        move_rect(surface, &pl1, 10);
       }
     }
     
     SDL_Delay(1);
   }
-
 }
