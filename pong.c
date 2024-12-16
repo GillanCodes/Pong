@@ -38,9 +38,18 @@ int main()
     {
       if (event.key.keysym.sym == SDLK_UP)
       {
-        move_rect(surface, &pl1, -10);
+        move_rect(surface, &pl2, -10);
       }
       if (event.key.keysym.sym == SDLK_DOWN)
+      {
+        move_rect(surface, &pl2, 10);
+      }
+      
+      if (event.key.keysym.sym == SDLK_z)
+      {
+        move_rect(surface, &pl1, -10);
+      }
+      if (event.key.keysym.sym == SDLK_s)
       {
         move_rect(surface, &pl1, 10);
       }
@@ -48,4 +57,9 @@ int main()
     
     SDL_Delay(1);
   }
+}
+
+void input_listener(SDL_Event event)
+{
+  
 }
