@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <stdio.h>
 
 #define WHITE_COLOR 0xFFFFFFFF
 
@@ -169,10 +170,12 @@ int main()
     move_ball(surface, &ball, &pl1, &pl2, &ball_speed, &score);
     if (score.pl1 != local_pl1_score)
     {
+      local_pl1_score = score.pl1;
       draw_init_game(surface, &score, &pl1, &pl2, &ball);
     }
     if (score.pl2 != local_pl2_score)
     {
+      local_pl2_score = score.pl2;
       draw_init_game(surface, &score, &pl1, &pl2, &ball);
     }
     //Draw Border
