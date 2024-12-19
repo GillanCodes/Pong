@@ -6,7 +6,7 @@ static int MOVEMENT_SPEED = 2;
 
 static int LEFT_INNER_BORDER = 80;
 static int RIGHT_INNER_BORDER = 560;
-static int BOTTOM_INNER_BORDER = 640;
+static int BOTTOM_INNER_BORDER = 480;
 static int TOP_INNER_BORDER = 0;
 
 static int BALL_DIAMETER = 20;
@@ -48,7 +48,9 @@ void move_ball(SDL_Surface* surface, SDL_Rect* ball, SDL_Rect* pl1, SDL_Rect* pl
     if ((ball->y + ball->h > pl1->y) && (ball->y < pl1->y + pl1->h))
     {
       ball_speed->x = -ball_speed->x;
-      double hit_fraction = ((double) (ball->y+ball->h)/(double)2 - (double)(pl1->y+pl1->h)/(double)2)/((double)PLAYER_HEIGHT/2);
+      int ball_center_y = ((ball->y+ball->h/2));
+      int player_center_y = ((pl1->y+pl1->h/2));
+      double hit_fraction = ((double) ball_center_y - (double) player_center_y)/ ((double) PLAYER_HEIGHT) * 2;
       ball_speed->y = (double) (hit_fraction * (double) MOVEMENT_SPEED);
     }  
   }
@@ -59,16 +61,19 @@ void move_ball(SDL_Surface* surface, SDL_Rect* ball, SDL_Rect* pl1, SDL_Rect* pl
     if ((ball->y + ball->h > pl2->y) && (ball->y < pl2->y + pl2->h))
     {
       ball_speed->x = -ball_speed->x;
-      double hit_fraction = ((double) (ball->y+ball->h)/(double)2 - (double)(pl2->y+pl2->h)/(double)2)/((double)PLAYER_HEIGHT/2);
+      int ball_center_y = ((ball->y+ball->h/2));
+      int player_center_y = ((pl2->y+pl2->h/2));
+      double hit_fraction = ((double) ball_center_y - (double) player_center_y)/ ((double) PLAYER_HEIGHT) * 2;
       ball_speed->y = (double) (hit_fraction * (double) MOVEMENT_SPEED);
     }
   }
 
-  //Ball hit top or bottom
+  //Ball hit top or bottom border
   if(ball->y <= TOP_INNER_BORDER)
     ball_speed->y = -ball_speed->y;
-  if(ball_speed->y + ball->h >= BOTTOM_INNER_BORDER)
+  if(ball->y + ball->h >= BOTTOM_INNER_BORDER)
     ball_speed->y = -ball_speed->y;
+
   move_rect(surface, ball, ball_speed);
 }
 
