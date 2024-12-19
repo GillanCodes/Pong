@@ -19,6 +19,11 @@ typedef struct Speed {
   int y;
 } Speed;
 
+typedef struct Score {
+  int pl1;
+  int pl2;
+} Score;
+
 //Handle rectengle drawing
 void move_rect(SDL_Surface* surface, SDL_Rect* rect, Speed* speed)
 {
@@ -40,8 +45,10 @@ void move_player(SDL_Surface* surface, SDL_Rect* pl,int direction)
 }
 
 // Handle Ball mouvement
-void move_ball(SDL_Surface* surface, SDL_Rect* ball, SDL_Rect* pl1, SDL_Rect* pl2, Speed* ball_speed)
+void move_ball(SDL_Surface* surface, SDL_Rect* ball, SDL_Rect* pl1, SDL_Rect* pl2, Speed* ball_speed, Score* score)
 {
+  int player_hit = 0;
+
   //When hit Player 1 side
   if (ball->x <= LEFT_INNER_BORDER)
   {
@@ -52,7 +59,13 @@ void move_ball(SDL_Surface* surface, SDL_Rect* ball, SDL_Rect* pl1, SDL_Rect* pl
       int player_center_y = ((pl1->y+pl1->h/2));
       double hit_fraction = ((double) ball_center_y - (double) player_center_y)/ ((double) PLAYER_HEIGHT) * 2;
       ball_speed->y = (double) (hit_fraction * (double) MOVEMENT_SPEED);
-    }  
+      player_hit = 1;
+    }
+    else 
+    {
+      score->pl2++;
+    }
+    
   }
   
   //When hit player 2 side
@@ -65,6 +78,11 @@ void move_ball(SDL_Surface* surface, SDL_Rect* ball, SDL_Rect* pl1, SDL_Rect* pl
       int player_center_y = ((pl2->y+pl2->h/2));
       double hit_fraction = ((double) ball_center_y - (double) player_center_y)/ ((double) PLAYER_HEIGHT) * 2;
       ball_speed->y = (double) (hit_fraction * (double) MOVEMENT_SPEED);
+      player_hit = 1;
+    }
+    else 
+    {
+      score->pl1++;
     }
   }
 
@@ -77,31 +95,42 @@ void move_ball(SDL_Surface* surface, SDL_Rect* ball, SDL_Rect* pl1, SDL_Rect* pl
   move_rect(surface, ball, ball_speed);
 }
 
+void draw_init_game(SDL_Surface* surface, Score* score, SDL_Rect* pl1, SDL_Rect* pl2, SDL_Rect* ball)
+{
+  
+  //Draw Player 1
+  SDL_FillRect(surface, pl1, WHITE_COLOR);
+
+  //Draw Player 2
+  SDL_FillRect(surface, pl2, WHITE_COLOR);
+
+  //Draw Ball
+  SDL_FillRect(surface, ball, WHITE_COLOR);
+}
+
 int main()
 {
   //Init the window with SDL2
   SDL_InitSubSystem(SDL_INIT_VIDEO);
   SDL_Window *window = SDL_CreateWindow("Pong", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
   SDL_Surface *surface = SDL_GetWindowSurface(window);
-  
-  //Init Player 1
-  SDL_Rect pl1 = (SDL_Rect) {LEFT_INNER_BORDER - PLAYER_WIDTH, 40, PLAYER_WIDTH, PLAYER_HEIGHT};
-  SDL_FillRect(surface, &pl1, WHITE_COLOR);
 
-  //Init Player 2
-  SDL_Rect pl2 = (SDL_Rect) {RIGHT_INNER_BORDER, 10, PLAYER_WIDTH, PLAYER_HEIGHT};
-  SDL_FillRect(surface, &pl2, WHITE_COLOR);
-
-  //Init Ball
-  SDL_Rect ball = (SDL_Rect) {(LEFT_INNER_BORDER + RIGHT_INNER_BORDER)/2, 10, BALL_DIAMETER, BALL_DIAMETER};
-  SDL_FillRect(surface, &ball, WHITE_COLOR);
+  Score score = (Score) {0,0};
   Speed ball_speed = (Speed) {MOVEMENT_SPEED, 0};
 
-  //Init Border
+  //Init
+  SDL_Rect pl1 = (SDL_Rect) {LEFT_INNER_BORDER - PLAYER_WIDTH, 40, PLAYER_WIDTH, PLAYER_HEIGHT};
+  SDL_Rect pl2 = (SDL_Rect) {RIGHT_INNER_BORDER, 10, PLAYER_WIDTH, PLAYER_HEIGHT};
+  SDL_Rect ball = (SDL_Rect) {(LEFT_INNER_BORDER + RIGHT_INNER_BORDER)/2, 10, BALL_DIAMETER, BALL_DIAMETER};
   SDL_Rect border = (SDL_Rect) {320, 0, 1, 480};
 
+  draw_init_game(surface, &score, &pl1, &pl2, &ball);
+  
   int running = 1;
   SDL_Event event;
+
+  int local_pl1_score = 0;
+  int local_pl2_score = 0;
 
   // Running loop
   while (running)
@@ -137,8 +166,15 @@ int main()
     }
 
     //move ball
-    move_ball(surface, &ball, &pl1, &pl2, &ball_speed);
-   
+    move_ball(surface, &ball, &pl1, &pl2, &ball_speed, &score);
+    if (score.pl1 != local_pl1_score)
+    {
+      draw_init_game(surface, &score, &pl1, &pl2, &ball);
+    }
+    if (score.pl2 != local_pl2_score)
+    {
+      draw_init_game(surface, &score, &pl1, &pl2, &ball);
+    }
     //Draw Border
     SDL_FillRect(surface, &border, WHITE_COLOR);
     
