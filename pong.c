@@ -3,7 +3,7 @@
 
 #define WHITE_COLOR 0xFFFFFFFF
 
-static int MOVEMENT_SPEED = 10;
+static int MOVEMENT_SPEED = 1;
 
 static int LEFT_INNER_BORDER = 80;
 static int RIGHT_INNER_BORDER = 560;
@@ -37,10 +37,13 @@ void move_player(SDL_Surface* surface, SDL_Rect* pl,int direction)
 
 void move_ball(SDL_Surface* surface, SDL_Rect* ball, SDL_Rect* pl1, SDL_Rect* pl2, Speed* ball_speed)
 {
-  if (ball->x < LEFT_INNER_BORDER)
-    ball_speed->x = -ball_speed->x;
-  if (ball->x + ball->w > RIGHT_INNER_BORDER)
-    ball_speed->x = -ball_speed->x;
+  if (ball->x <= LEFT_INNER_BORDER)
+    if ((ball->y + ball->h > pl1->y) && (ball->y < pl1->y + pl1->h))
+      ball_speed->x = -ball_speed->x;
+      
+  if (ball->x + ball->w >= RIGHT_INNER_BORDER)
+    if ((ball->y + ball->h > pl2->y) && (ball->y < pl2->y + pl2->h))
+      ball_speed->x = -ball_speed->x;
 
   move_rect(surface, ball, ball_speed);
 }
@@ -59,7 +62,7 @@ int main()
 
   SDL_Rect ball = (SDL_Rect) {320, 240, 10,10};
   SDL_FillRect(surface, &ball, WHITE_COLOR);
-  Speed ball_speed = (Speed) {10, 0};
+  Speed ball_speed = (Speed) {MOVEMENT_SPEED, 0};
 
   SDL_Rect border = (SDL_Rect) {320, 0, 1, 480};
 
