@@ -16,6 +16,17 @@ void move_rect(SDL_Surface* surface, SDL_Rect * rect, Speed *speed)
   SDL_FillRect(surface, rect, WHITE_COLOR);
 }
 
+/* direction is 1 or -1 */
+void move_player(SDL_Surface* surface, SDL_Rect* pl,int direction)
+{
+  if(pl->y <= 0 && -1 == direction)
+    return;
+  if (pl->y >= surface->h - pl->h && 1 == direction)
+    return;
+  Speed speed = (Speed) {0,direction*MOVEMENT_SPEED};
+  move_rect(surface, pl ,&speed);
+}
+
 int main()
 {
   SDL_InitSubSystem(SDL_INIT_VIDEO);
@@ -50,24 +61,20 @@ int main()
     {
       if (event.key.keysym.sym == SDLK_UP)
       {
-        Speed speed = (Speed) {0, -MOVEMENT_SPEED};
-        move_rect(surface, &pl2, &speed);
+        move_player(surface, &pl1, -1);
       }
       if (event.key.keysym.sym == SDLK_DOWN)
       {
-        Speed speed = (Speed) {0, +MOVEMENT_SPEED};
-        move_rect(surface, &pl2, &speed);
+        move_player(surface, &pl1, 1);
       }
       
       if (event.key.keysym.sym == SDLK_z)
       {
-        Speed speed = (Speed) {0, -MOVEMENT_SPEED};
-        move_rect(surface, &pl1, &speed);
+        move_player(surface, &pl2, -1);
       }
       if (event.key.keysym.sym == SDLK_s)
       {
-        Speed speed = (Speed) {0, +MOVEMENT_SPEED};
-        move_rect(surface, &pl1, &speed);
+        move_player(surface, &pl2, 1);
       }
     }
     
