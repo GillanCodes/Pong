@@ -1,5 +1,7 @@
 #include <SDL2/SDL.h>
 
+#define  MOVEMENT_SPEED 10
+
 void move_rect(SDL_Surface* surface, SDL_Rect * rect, int down)
 {
   SDL_FillRect(surface, rect, 0x00000000);
@@ -27,7 +29,6 @@ int main()
   while (running)
   {
     SDL_PollEvent(&event);
-    SDL_UpdateWindowSurface(window);
       
     if (event.type == SDL_QUIT)
     {
@@ -38,28 +39,24 @@ int main()
     {
       if (event.key.keysym.sym == SDLK_UP)
       {
-        move_rect(surface, &pl2, -10);
+        move_rect(surface, &pl2, -MOVEMENT_SPEED);
       }
       if (event.key.keysym.sym == SDLK_DOWN)
       {
-        move_rect(surface, &pl2, 10);
+        move_rect(surface, &pl2, MOVEMENT_SPEED);
       }
       
       if (event.key.keysym.sym == SDLK_z)
       {
-        move_rect(surface, &pl1, -10);
+        move_rect(surface, &pl1, -MOVEMENT_SPEED);
       }
       if (event.key.keysym.sym == SDLK_s)
       {
-        move_rect(surface, &pl1, 10);
+        move_rect(surface, &pl1, MOVEMENT_SPEED);
       }
     }
     
+    SDL_UpdateWindowSurface(window);
     SDL_Delay(1);
   }
-}
-
-void input_listener(SDL_Event event)
-{
-  
 }
