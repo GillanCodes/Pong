@@ -1,12 +1,15 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_rect.h>
 
 #define WHITE_COLOR 0xFFFFFFFF
 
-static int MOVEMENT_SPEED = 1;
+static int MOVEMENT_SPEED = 2;
 
 static int LEFT_INNER_BORDER = 80;
 static int RIGHT_INNER_BORDER = 560;
+static int BOTTOM_INNER_BORDER = 640;
+static int TOP_INNER_BORDER = 0;
+
+static int BALL_DIAMETER = 20;
 
 static int PLAYER_WIDTH = 40;
 static int PLAYER_HEIGHT = 200;
@@ -31,20 +34,36 @@ void move_player(SDL_Surface* surface, SDL_Rect* pl,int direction)
     return;
   if (pl->y >= surface->h - pl->h && 1 == direction)
     return;
-  Speed speed = (Speed) {0,direction*MOVEMENT_SPEED};
+  Speed speed = (Speed) {0,direction*MOVEMENT_SPEED*10};
   move_rect(surface, pl ,&speed);
 }
 
 void move_ball(SDL_Surface* surface, SDL_Rect* ball, SDL_Rect* pl1, SDL_Rect* pl2, Speed* ball_speed)
 {
   if (ball->x <= LEFT_INNER_BORDER)
+  {
     if ((ball->y + ball->h > pl1->y) && (ball->y < pl1->y + pl1->h))
+    {
       ball_speed->x = -ball_speed->x;
-      
-  if (ball->x + ball->w >= RIGHT_INNER_BORDER)
-    if ((ball->y + ball->h > pl2->y) && (ball->y < pl2->y + pl2->h))
-      ball_speed->x = -ball_speed->x;
+      double hit_fraction = ((double) (ball->y+ball->h)/(double)2 - (double)(pl1->y+pl1->h)/(double)2)/((double)PLAYER_HEIGHT/2);
+      ball_speed->y = (double) (hit_fraction * (double) MOVEMENT_SPEED);
+    }  
+  }
 
+  if (ball->x + ball->w >= RIGHT_INNER_BORDER)
+  {
+    if ((ball->y + ball->h > pl2->y) && (ball->y < pl2->y + pl2->h))
+    {
+      ball_speed->x = -ball_speed->x;
+      double hit_fraction = ((double) (ball->y+ball->h)/(double)2 - (double)(pl2->y+pl2->h)/(double)2)/((double)PLAYER_HEIGHT/2);
+      ball_speed->y = (double) (hit_fraction * (double) MOVEMENT_SPEED);
+    }
+  }
+
+  if(ball->y <= TOP_INNER_BORDER)
+    ball_speed->y = -ball_speed->y;
+  if(ball_speed->y + ball->h >= BOTTOM_INNER_BORDER)
+    ball_speed->y = -ball_speed->y;
   move_rect(surface, ball, ball_speed);
 }
 
@@ -57,10 +76,10 @@ int main()
   SDL_Rect pl1 = (SDL_Rect) {LEFT_INNER_BORDER - PLAYER_WIDTH, 40, PLAYER_WIDTH, PLAYER_HEIGHT};
   SDL_FillRect(surface, &pl1, WHITE_COLOR);
 
-  SDL_Rect pl2 = (SDL_Rect) {RIGHT_INNER_BORDER, 120, PLAYER_WIDTH, PLAYER_HEIGHT};
+  SDL_Rect pl2 = (SDL_Rect) {RIGHT_INNER_BORDER, 10, PLAYER_WIDTH, PLAYER_HEIGHT};
   SDL_FillRect(surface, &pl2, WHITE_COLOR);
 
-  SDL_Rect ball = (SDL_Rect) {320, 240, 10,10};
+  SDL_Rect ball = (SDL_Rect) {(LEFT_INNER_BORDER + RIGHT_INNER_BORDER)/2, 10, BALL_DIAMETER, BALL_DIAMETER};
   SDL_FillRect(surface, &ball, WHITE_COLOR);
   Speed ball_speed = (Speed) {MOVEMENT_SPEED, 0};
 
@@ -82,20 +101,20 @@ int main()
     {
       if (event.key.keysym.sym == SDLK_UP)
       {
-        move_player(surface, &pl1, -1);
+        move_player(surface, &pl2, -1);
       }
       if (event.key.keysym.sym == SDLK_DOWN)
       {
-        move_player(surface, &pl1, 1);
+        move_player(surface, &pl2, 1);
       }
       
       if (event.key.keysym.sym == SDLK_z)
       {
-        move_player(surface, &pl2, -1);
+        move_player(surface, &pl1, -1);
       }
       if (event.key.keysym.sym == SDLK_s)
       {
-        move_player(surface, &pl2, 1);
+        move_player(surface, &pl1, 1);
       }
     }
 
