@@ -104,15 +104,15 @@ void draw_init_game(SDL_Surface* surface, Score* score, SDL_Rect* pl1, SDL_Rect*
   SDL_Rect reset = (SDL_Rect) {0,0, SURFACE_WIDTH, SURFACE_WIDTH};
   SDL_FillRect(surface, &reset, 0x00000000); 
   //Draw Player 1
-  *pl1 = (SDL_Rect) {LEFT_INNER_BORDER - PLAYER_WIDTH, 40, PLAYER_WIDTH, PLAYER_HEIGHT};
+  *pl1 = (SDL_Rect) {LEFT_INNER_BORDER - PLAYER_WIDTH, SURFACE_HEIGHT/2 - PLAYER_HEIGHT/2, PLAYER_WIDTH, PLAYER_HEIGHT};
   SDL_FillRect(surface, pl1, WHITE_COLOR);
 
   //Draw Player 2
-  *pl2 = (SDL_Rect) {RIGHT_INNER_BORDER, 10, PLAYER_WIDTH, PLAYER_HEIGHT};
+  *pl2 = (SDL_Rect) {RIGHT_INNER_BORDER, SURFACE_HEIGHT/2 - PLAYER_HEIGHT/2, PLAYER_WIDTH, PLAYER_HEIGHT};
   SDL_FillRect(surface, pl2, WHITE_COLOR);
 
   //Draw Ball
-  *ball = (SDL_Rect) {(LEFT_INNER_BORDER + RIGHT_INNER_BORDER)/2, 10, BALL_DIAMETER, BALL_DIAMETER};
+  *ball = (SDL_Rect) {(LEFT_INNER_BORDER + RIGHT_INNER_BORDER)/2, SURFACE_HEIGHT/2 - BALL_DIAMETER/2, BALL_DIAMETER, BALL_DIAMETER};
   SDL_FillRect(surface, ball, WHITE_COLOR);
 
   *ball_speed = (Speed) {MOVEMENT_SPEED, 0};
@@ -129,9 +129,9 @@ int main()
   Speed ball_speed = (Speed) {MOVEMENT_SPEED, 0};
 
   //Init
-  SDL_Rect pl1 = (SDL_Rect) {LEFT_INNER_BORDER - PLAYER_WIDTH, 40, PLAYER_WIDTH, PLAYER_HEIGHT};
-  SDL_Rect pl2 = (SDL_Rect) {RIGHT_INNER_BORDER, 10, PLAYER_WIDTH, PLAYER_HEIGHT};
-  SDL_Rect ball = (SDL_Rect) {(LEFT_INNER_BORDER + RIGHT_INNER_BORDER)/2, 10, BALL_DIAMETER, BALL_DIAMETER};
+  SDL_Rect pl1 = (SDL_Rect) {LEFT_INNER_BORDER - PLAYER_WIDTH, 300, PLAYER_WIDTH, PLAYER_HEIGHT};
+  SDL_Rect pl2 = (SDL_Rect) {RIGHT_INNER_BORDER, 100, PLAYER_WIDTH, PLAYER_HEIGHT};
+  SDL_Rect ball = (SDL_Rect) {(LEFT_INNER_BORDER + RIGHT_INNER_BORDER)/2, 300, BALL_DIAMETER, BALL_DIAMETER};
   SDL_Rect border = (SDL_Rect) {320, 0, 1, 480};
 
   draw_init_game(surface, &score, &pl1, &pl2, &ball, &ball_speed);
