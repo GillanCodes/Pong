@@ -13,10 +13,10 @@ static int RIGHT_INNER_BORDER = 560;
 static int BOTTOM_INNER_BORDER = 480;
 static int TOP_INNER_BORDER = 0;
 
-static int BALL_DIAMETER = 20;
+static int BALL_DIAMETER = 10;
 
-static int PLAYER_WIDTH = 40;
-static int PLAYER_HEIGHT = 200;
+static int PLAYER_WIDTH = 10;
+static int PLAYER_HEIGHT = 50;
 
 typedef struct Speed {
   int x;
@@ -196,6 +196,13 @@ int main()
     {
       printf("Score pl1 : %d\nScore pl2 : %d\n", score.pl1, score.pl2);
     }
+
+    if (1 == score_changed && (5 == score.pl1 || 5 == score.pl2))
+    {
+      printf("GAME END\n");
+      running = 0;
+    }
+
     //Draw Border
     SDL_FillRect(surface, &border, WHITE_COLOR);
     
