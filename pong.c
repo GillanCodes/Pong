@@ -1,9 +1,11 @@
 #include <SDL2/SDL.h>
-#include <stdio.h>
 
 #define WHITE_COLOR 0xFFFFFFFF
 
 static int MOVEMENT_SPEED = 2;
+
+static int SURFACE_WIDTH = 640;
+static int SURFACE_HEIGHT = 480;
 
 static int LEFT_INNER_BORDER = 80;
 static int RIGHT_INNER_BORDER = 560;
@@ -98,14 +100,18 @@ void move_ball(SDL_Surface* surface, SDL_Rect* ball, SDL_Rect* pl1, SDL_Rect* pl
 
 void draw_init_game(SDL_Surface* surface, Score* score, SDL_Rect* pl1, SDL_Rect* pl2, SDL_Rect* ball)
 {
-  
+  SDL_Rect reset = (SDL_Rect) {0,0, SURFACE_WIDTH, SURFACE_WIDTH};
+  SDL_FillRect(surface, &reset, 0x00000000); 
   //Draw Player 1
+  *pl1 = (SDL_Rect) {LEFT_INNER_BORDER - PLAYER_WIDTH, 40, PLAYER_WIDTH, PLAYER_HEIGHT};
   SDL_FillRect(surface, pl1, WHITE_COLOR);
 
   //Draw Player 2
+  *pl2 = (SDL_Rect) {RIGHT_INNER_BORDER, 10, PLAYER_WIDTH, PLAYER_HEIGHT};
   SDL_FillRect(surface, pl2, WHITE_COLOR);
 
   //Draw Ball
+  *ball = (SDL_Rect) {(LEFT_INNER_BORDER + RIGHT_INNER_BORDER)/2, 10, BALL_DIAMETER, BALL_DIAMETER};
   SDL_FillRect(surface, ball, WHITE_COLOR);
 }
 
