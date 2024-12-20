@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <stdio.h>
 
 #define WHITE_COLOR 0xFFFFFFFF
 
@@ -98,7 +99,7 @@ void move_ball(SDL_Surface* surface, SDL_Rect* ball, SDL_Rect* pl1, SDL_Rect* pl
   move_rect(surface, ball, ball_speed);
 }
 
-void draw_init_game(SDL_Surface* surface, Score* score, SDL_Rect* pl1, SDL_Rect* pl2, SDL_Rect* ball)
+void draw_init_game(SDL_Surface* surface, Score* score, SDL_Rect* pl1, SDL_Rect* pl2, SDL_Rect* ball, Speed* ball_speed)
 {
   SDL_Rect reset = (SDL_Rect) {0,0, SURFACE_WIDTH, SURFACE_WIDTH};
   SDL_FillRect(surface, &reset, 0x00000000); 
@@ -113,6 +114,8 @@ void draw_init_game(SDL_Surface* surface, Score* score, SDL_Rect* pl1, SDL_Rect*
   //Draw Ball
   *ball = (SDL_Rect) {(LEFT_INNER_BORDER + RIGHT_INNER_BORDER)/2, 10, BALL_DIAMETER, BALL_DIAMETER};
   SDL_FillRect(surface, ball, WHITE_COLOR);
+
+  *ball_speed = (Speed) {MOVEMENT_SPEED, 0};
 }
 
 int main()
@@ -131,7 +134,7 @@ int main()
   SDL_Rect ball = (SDL_Rect) {(LEFT_INNER_BORDER + RIGHT_INNER_BORDER)/2, 10, BALL_DIAMETER, BALL_DIAMETER};
   SDL_Rect border = (SDL_Rect) {320, 0, 1, 480};
 
-  draw_init_game(surface, &score, &pl1, &pl2, &ball);
+  draw_init_game(surface, &score, &pl1, &pl2, &ball, &ball_speed);
   
   int running = 1;
   SDL_Event event;
@@ -174,15 +177,24 @@ int main()
 
     //move ball
     move_ball(surface, &ball, &pl1, &pl2, &ball_speed, &score);
+
+    //Check if score chnaged
+    int score_changed = 0;
     if (score.pl1 != local_pl1_score)
     {
       local_pl1_score = score.pl1;
-      draw_init_game(surface, &score, &pl1, &pl2, &ball);
+      draw_init_game(surface, &score, &pl1, &pl2, &ball, &ball_speed);
+      score_changed = 1;
     }
     if (score.pl2 != local_pl2_score)
     {
       local_pl2_score = score.pl2;
-      draw_init_game(surface, &score, &pl1, &pl2, &ball);
+      draw_init_game(surface, &score, &pl1, &pl2, &ball, &ball_speed);
+      score_changed = 1;
+    }
+    if (score_changed) 
+    {
+      printf("Score pl1 : %d\nScore pl2 : %d\n", score.pl1, score.pl2);
     }
     //Draw Border
     SDL_FillRect(surface, &border, WHITE_COLOR);
